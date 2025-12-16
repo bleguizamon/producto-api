@@ -262,5 +262,7 @@ Verifica que:
 
 ## 📄 Licencia
 
-ISC
+Este proyecto está licenciado bajo la **GNU General Public License v3.0 (GPL-3.0)**.
+
+Para más información, consulta el archivo [LICENSE](LICENSE) en la raíz del proyecto.
 
