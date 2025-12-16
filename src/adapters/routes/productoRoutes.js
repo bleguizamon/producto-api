@@ -18,6 +18,8 @@ router.use(basicAuth);
  *   post:
  *     summary: Crear un nuevo producto
  *     tags: [Productos]
+ *     security:
+ *       - basicAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -57,6 +59,18 @@ router.use(basicAuth);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: No autorizado - Credenciales faltantes o inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Prohibido - Credenciales incorrectas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.post("/", crearProducto);
 
@@ -66,6 +80,8 @@ router.post("/", crearProducto);
  *   get:
  *     summary: Obtener todos los productos
  *     tags: [Productos]
+ *     security:
+ *       - basicAuth: []
  *     responses:
  *       200:
  *         description: Lista de productos
@@ -81,6 +97,18 @@ router.post("/", crearProducto);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: No autorizado - Credenciales faltantes o inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Prohibido - Credenciales incorrectas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get("/", obtenerProductos);
 
@@ -90,6 +118,8 @@ router.get("/", obtenerProductos);
  *   get:
  *     summary: Obtener un producto por ID
  *     tags: [Productos]
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -116,6 +146,18 @@ router.get("/", obtenerProductos);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: No autorizado - Credenciales faltantes o inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Prohibido - Credenciales incorrectas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.get("/:id", obtenerProductoPorId);
 
@@ -125,6 +167,8 @@ router.get("/:id", obtenerProductoPorId);
  *   put:
  *     summary: Actualizar un producto
  *     tags: [Productos]
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -173,6 +217,18 @@ router.get("/:id", obtenerProductoPorId);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: No autorizado - Credenciales faltantes o inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Prohibido - Credenciales incorrectas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  */
 router.put("/:id", actualizarProducto);
 
@@ -182,6 +238,8 @@ router.put("/:id", actualizarProducto);
  *   delete:
  *     summary: Eliminar un producto
  *     tags: [Productos]
+ *     security:
+ *       - basicAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -208,6 +266,18 @@ router.put("/:id", actualizarProducto);
  *               $ref: '#/components/schemas/Error'
  *       400:
  *         description: Error en la solicitud
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       401:
+ *         description: No autorizado - Credenciales faltantes o inválidas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       403:
+ *         description: Prohibido - Credenciales incorrectas
  *         content:
  *           application/json:
  *             schema:

@@ -18,6 +18,13 @@ const options = {
       },
     ],
     components: {
+      securitySchemes: {
+        basicAuth: {
+          type: "http",
+          scheme: "basic",
+          description: "Autenticación Basic Auth. Usa las credenciales configuradas en las variables de entorno BASIC_AUTH_USER y BASIC_AUTH_PASS",
+        },
+      },
       schemas: {
         Producto: {
           type: "object",
