@@ -204,7 +204,7 @@ Independencia del framework
 
 Base de datos: MongoDB
 
-ODM: Mongoose
+ORM: Mongoose
 
 Mapeo de _id → id en el repositorio
 
