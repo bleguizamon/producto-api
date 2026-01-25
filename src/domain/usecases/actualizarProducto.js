@@ -1,10 +1,19 @@
-import { ProductoRepository } from "../../adapters/repositories/productoRepository.js";
+import productoRepository from "../../adapters/repositories/productoRepository.js";
 
-const productoRepository = new ProductoRepository();
+export default async function actualizarProducto(id, data) {
+  if (!id) {
+    throw new Error("El id del producto es obligatorio");
+  }
 
-export const actualizarProducto = async (id, data) => {
-  const productoActualizado = await productoRepository.actualizarProducto(id, data);
-  if (!productoActualizado) throw new Error("No se pudo actualizar el producto");
-  return productoActualizado;
-};
+  if (data.precio != null && data.precio <= 0) {
+    throw new Error("El precio debe ser mayor a 0");
+  }
 
+  const producto = await productoRepository.actualizar(id, data);
+
+  if (!producto) {
+    throw new Error("Producto no encontrado");
+  }
+
+  return producto;
+}

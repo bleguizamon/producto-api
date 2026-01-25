@@ -1,7 +1,5 @@
-import { ProductoRepository } from "../../adapters/repositories/productoRepository.js";
-const productoRepository = new ProductoRepository();
-export const obtenerProductos = async () => {
-  const productos = await productoRepository.obtenerProductos();
-  return productos;
-};
+import productoRepository from "../../adapters/repositories/productoRepository.js";
 
+export default async function obtenerProductos() {
+  return await productoRepository.obtenerTodos();
+}

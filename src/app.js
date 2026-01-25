@@ -9,10 +9,24 @@ export default async function createApp() {
   const swaggerUi = (await import("swagger-ui-express")).default;
   const { swaggerSpec } = await import("./config/swagger.js");
 
+  //GraphQL
+  const graphqlPkg = await import('express-graphql');
+  const graphqlHTTP = graphqlPkg.graphqlHTTP;
+
   // Importa las rutas
   const productoRoutes = (await import("./adapters/routes/productoRoutes.js")).default;
+  const { schema, root } = await import("./infra/graphql/schema.js");
 
   const app = express();
+
+  app.use("/graphql",
+    graphqlHTTP({
+      schema: schema,
+      rootValue: root,
+      graphiql: true,
+    })
+  );
+
 
   //Middlewares de seguridad y utilidades
   app.use(helmet());
@@ -20,7 +34,7 @@ export default async function createApp() {
   app.use(morgan("dev"));
   app.use(bodyParser.json());
   app.use(cookieParser());
-  
+
   // Swagger UI - Sin seguridad para pruebas
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
@@ -30,31 +44,6 @@ export default async function createApp() {
   //Rutas base
   app.use("/api/productos", productoRoutes);
 
-  /**
-   * @swagger
-   * /health:
-   *   get:
-   *     summary: Health check del servidor
-   *     tags: [Health]
-   *     responses:
-   *       200:
-   *         description: Servidor funcionando correctamente
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 status:
-   *                   type: string
-   *                   example: "ok"
-   *                 environment:
-   *                   type: string
-   *                   example: "development"
-   *                 message:
-   *                   type: string
-   *                   example: "API Productos corriendo correctamente"
-   */
-  //Health check
   app.get("/health", (req, res) => {
     res.json({
       status: "ok",

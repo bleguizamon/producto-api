@@ -1,14 +1,21 @@
-import { ProductoRepository } from "../../adapters/repositories/productoRepository.js";
+import productoRepository from "../../adapters/repositories/productoRepository.js";
+import Producto from "../entities/Producto.js";
 
-const productoRepository = new ProductoRepository();
+export default async function crearProducto(data) {
+  const { nombre, descripcion, precio } = data;
 
-export const crearProducto = async (data) => {
-  // Aquí podrías validar reglas de negocio, por ejemplo:
-  if (!data.descripcion || !data.nombre) {
-    throw new Error("El nombre y descripción son obligatorios");
+  if (!nombre || nombre.trim() === "") {
+    throw new Error("El nombre del producto es obligatorio");
   }
 
-  const nuevoProducto = await productoRepository.crearProducto(data);
-  return nuevoProducto;
-};
+  if (!descripcion || descripcion.trim() === "") {
+    throw new Error("La descripción del producto es obligatoria");
+  }
 
+  if (precio == null || precio <= 0) {
+    throw new Error("El precio debe ser un número mayor a 0");
+  }
+
+  const producto = new Producto(data);
+  return await productoRepository.crear(producto);
+}

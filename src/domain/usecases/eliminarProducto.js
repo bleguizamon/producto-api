@@ -1,8 +1,16 @@
-import { ProductoRepository } from "../../adapters/repositories/productoRepository.js";
-const productoRepository = new ProductoRepository();
-export const eliminarProducto = async (id) => {
-  const resultado = await productoRepository.eliminarProducto(id);
-  if (!resultado) throw new Error("No se encontró el producto para eliminar");
-  return { mensaje: "Producto eliminado correctamente" };
-};
+import productoRepository from "../../adapters/repositories/productoRepository.js";
 
+export default async function eliminarProducto(id) {
+  if (!id) {
+    throw new Error("Debe proporcionar un id");
+  }
+
+  const producto = await productoRepository.obtenerPorId(id);
+
+  if (!producto) {
+    throw new Error("Producto no encontrado");
+  }
+
+  await productoRepository.eliminar(id);
+  return true;
+}
