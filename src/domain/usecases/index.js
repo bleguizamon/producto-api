@@ -1,6 +1,13 @@
-// src/domain/usecases/index.js
-export * from './crearProducto.js';
-export * from './obtenerProductos.js';
-export * from './obtenerProductoPorId.js';
-export * from './actualizarProducto.js';
-export * from './eliminarProducto.js';
+import crearProducto from "./crearProducto.js";
+import obtenerProductos from "./obtenerProductos.js";
+import obtenerProductoPorId from "./obtenerProductoPorId.js";
+import actualizarProducto from "./actualizarProducto.js";
+import eliminarProducto from "./eliminarProducto.js";
+
+export {
+  crearProducto,
+  obtenerProductos,
+  obtenerProductoPorId,
+  actualizarProducto,
+  eliminarProducto,
+};

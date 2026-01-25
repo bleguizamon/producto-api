@@ -1,30 +1,70 @@
 import ProductoModel from "../../infra/db/models/productoModel.js";
-import { Producto } from "../../domain/entities/Producto.js";
 
-export class ProductoRepository {
-  async crearProducto(data) {
-    const producto = new Producto(data);
-    const productoDB = new ProductoModel(producto);
-    return await productoDB.save();
-  }
-
-  async obtenerProductos() {
-    return await ProductoModel.find();
-  }
-
-  async obtenerProductoPorId(id) {
-    return await ProductoModel.findById(id);
-  }
-
-  async actualizarProducto(id, data) {
-    const productoActualizado = await ProductoModel.findByIdAndUpdate(id, data, {
-      new: true,
+const productoRepository = {
+  async crear(producto) {
+    const nuevoProducto = await ProductoModel.create({
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
     });
-    return productoActualizado;
-  }
 
-  async eliminarProducto(id) {
-    return await ProductoModel.findByIdAndDelete(id);
-  }
-}
+    return {
+      id: nuevoProducto._id.toString(),
+      nombre: nuevoProducto.nombre,
+      descripcion: nuevoProducto.descripcion,
+      precio: nuevoProducto.precio,
+    };
+  },
 
+  async obtenerTodos() {
+    const productos = await ProductoModel.find();
+
+    return productos.map((p) => ({
+      id: p._id.toString(),
+      nombre: p.nombre,
+      descripcion: p.descripcion,
+      precio: p.precio,
+    }));
+  },
+
+  async obtenerPorId(id) {
+    const producto = await ProductoModel.findById(id);
+
+    if (!producto) return null;
+
+    return {
+      id: producto._id.toString(),
+      nombre: producto.nombre,
+      descripcion: producto.descripcion,
+      precio: producto.precio,
+    };
+  },
+
+  async actualizar(id, data) {
+    const productoActualizado = await ProductoModel.findByIdAndUpdate(
+      id,
+      {
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        precio: data.precio,
+      },
+      { new: true }
+    );
+
+    if (!productoActualizado) return null;
+
+    return {
+      id: productoActualizado._id.toString(),
+      nombre: productoActualizado.nombre,
+      descripcion: productoActualizado.descripcion,
+      precio: productoActualizado.precio,
+    };
+  },
+
+  async eliminar(id) {
+    await ProductoModel.findByIdAndDelete(id);
+    return true;
+  },
+};
+
+export default productoRepository;
