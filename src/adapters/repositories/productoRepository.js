@@ -1,64 +1,48 @@
 import ProductoModel from "../../infra/db/models/productoModel.js";
 
 const productoRepository = {
+
   async crear(producto) {
     const nuevoProducto = await ProductoModel.create({
+      usuarioId: producto.usuarioId,
       nombre: producto.nombre,
       descripcion: producto.descripcion,
       precio: producto.precio,
+      stock: producto.stock,
+      disponible: producto.disponible
     });
 
-    return {
-      id: nuevoProducto._id.toString(),
-      nombre: nuevoProducto.nombre,
-      descripcion: nuevoProducto.descripcion,
-      precio: nuevoProducto.precio,
-    };
+    return mapProducto(nuevoProducto);
   },
 
   async obtenerTodos() {
     const productos = await ProductoModel.find();
 
-    return productos.map((p) => ({
-      id: p._id.toString(),
-      nombre: p.nombre,
-      descripcion: p.descripcion,
-      precio: p.precio,
-    }));
+    return productos.map(mapProducto);
   },
 
   async obtenerPorId(id) {
     const producto = await ProductoModel.findById(id);
-
     if (!producto) return null;
-
-    return {
-      id: producto._id.toString(),
-      nombre: producto.nombre,
-      descripcion: producto.descripcion,
-      precio: producto.precio,
-    };
+    return mapProducto(producto);
   },
 
   async actualizar(id, data) {
     const productoActualizado = await ProductoModel.findByIdAndUpdate(
       id,
       {
+        usuarioId: data.usuarioId,
         nombre: data.nombre,
         descripcion: data.descripcion,
         precio: data.precio,
+        stock: data.stock,
+        disponible: data.disponible
       },
       { new: true }
     );
 
     if (!productoActualizado) return null;
-
-    return {
-      id: productoActualizado._id.toString(),
-      nombre: productoActualizado.nombre,
-      descripcion: productoActualizado.descripcion,
-      precio: productoActualizado.precio,
-    };
+    return mapProducto(productoActualizado);
   },
 
   async eliminar(id) {
@@ -66,5 +50,18 @@ const productoRepository = {
     return true;
   },
 };
+
+function mapProducto(p) {
+  return {
+    id: p._id.toString(),
+    usuarioId: p.usuarioId?.toString(),
+    nombre: p.nombre,
+    descripcion: p.descripcion,
+    precio: p.precio,
+    stock: p.stock,
+    disponible: p.disponible,
+    fechaCreacion: p.fechaCreacion,
+  };
+}
 
 export default productoRepository;

@@ -10,30 +10,37 @@ export default async function createApp() {
   const { swaggerSpec } = await import("./config/swagger.js");
 
   //GraphQL
-  const graphqlPkg = await import('express-graphql');
-  const graphqlHTTP = graphqlPkg.graphqlHTTP;
-
+  const { ApolloServer } = await import("@apollo/server");
+  const { expressMiddleware } = await import("@apollo/server/express4");
+  const { typeDefs, resolvers } = await import("./infra/graphql/schema.js");
+ 
   // Importa las rutas
   const productoRoutes = (await import("./adapters/routes/productoRoutes.js")).default;
-  const { schema, root } = await import("./infra/graphql/schema.js");
-
+  const usuarioRoutes = (await import("./adapters/routes/usuarioRoutes.js")).default;
   const app = express();
 
-  app.use("/graphql",
-    graphqlHTTP({
-      schema: schema,
-      rootValue: root,
-      graphiql: true,
-    })
-  );
+  // JSON global primero
+  app.use(express.json());
 
+  const apolloServer = new ApolloServer({
+    typeDefs,
+    resolvers,
+    introspection: true
+  });
+
+  await apolloServer.start();
+
+  // GraphQL sin repetir json
+  app.use("/graphql", expressMiddleware(apolloServer));
 
   //Middlewares de seguridad y utilidades
   app.use(helmet());
   app.use(cors());
   app.use(morgan("dev"));
-  app.use(bodyParser.json());
   app.use(cookieParser());
+
+
+
 
   // Swagger UI - Sin seguridad para pruebas
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
@@ -43,6 +50,7 @@ export default async function createApp() {
 
   //Rutas base
   app.use("/api/productos", productoRoutes);
+  app.use("/api/usuarios", usuarioRoutes);
 
   app.get("/health", (req, res) => {
     res.json({

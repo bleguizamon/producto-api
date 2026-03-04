@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const productoSchema = new mongoose.Schema(
   {
+    usuarioId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Usuario",
+      required: [true, "El producto debe pertenecer a un usuario"],
+    },
     nombre: {
       type: String,
       required: [true, "El nombre del producto es obligatorio"],
@@ -21,10 +26,25 @@ const productoSchema = new mongoose.Schema(
       required: [true, "El precio del producto es obligatorio"],
       min: [0.01, "El precio debe ser mayor a 0"],
     },
+    stock: {
+      type: Number,
+      required: [true, "El stock es obligatorio"],
+      min: [0, "El stock no puede ser negativo"],
+    },
+    disponible: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+    fechaCreacion: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
   },
   {
     versionKey: false,
-    timestamps: true
+    timestamps: true,
   }
 );
 
